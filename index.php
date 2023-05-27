@@ -25,7 +25,6 @@
         <a href="../restaurant-proje/">
             <div class="site-logo"></div>
         </a>
-
         <div class="buttons">
             <?php require_once("asd/header_buttons.php"); ?>
 
