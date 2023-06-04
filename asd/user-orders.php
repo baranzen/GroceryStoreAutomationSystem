@@ -1,14 +1,14 @@
 <?php
-
-require_once("../conn.php");
-$sql = "select * from orders where restaurant_id = 1";
+session_start();
+require_once("conn.php");
+$sessionID = $_SESSION["user_id"];
+$sql = "select * from orders where user_id = $sessionID";
 $sth = $dbconn->prepare($sql);
 $sth->execute();
-$orders = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-
+$orders = array_reverse($sth->fetchAll(PDO::FETCH_ASSOC), false);
 
 ?>
+
 
 <?php
 $groupedOrders = array();
@@ -20,33 +20,11 @@ foreach ($orders as $order) {
         $groupedOrders[$combineId] = array($order);
     }
 }
-$groupedOrders = array_reverse($groupedOrders, false);
 
 
 foreach ($groupedOrders as $group) {
-    $userID = $group[0]["user_id"];
-
-    $sql = "select * from users where user_id = $userID";
-    $sth = $dbconn->prepare($sql);
-    $sth->execute();
-    $user = $sth->fetch(PDO::FETCH_ASSOC);
     ?>
-
     <tr>
-        <th scope="row">
-            <?php echo $group[0]["combine_id"] ?>
-        </th>
-        <td>
-            <?php echo $user["user_name"] ?>
-        </td>
-        <td>
-            <?php echo $user["user_tel"] ?>
-        </td>
-        <td>
-            <p style="width:50%;">
-                <?php echo $user["user_adress"] ?>
-            </p>
-        </td>
         <td>
             <?php
             $productsName = "";
@@ -62,6 +40,12 @@ foreach ($groupedOrders as $group) {
         </td>
         <td>
             <?php echo count($group)?>
+        </td>
+        <td>
+            <?php echo $order["restaurant_id"]?>
+        </td>
+        <td>
+            <?php echo $group[0]["date"]; ?>
         </td>
         <td>
             <?php

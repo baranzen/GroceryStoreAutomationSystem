@@ -65,34 +65,21 @@ if (isset($_POST["order"]) && !empty($sepet)) {
         echo "<script>alert('Giris Yapiniz!');</script>";
         header("Refresh:0; url=../restaurant-proje/giris-yap.php");
     } else {
+        
         unset($_SESSION["sepet"]);
-        $userID = 1;
-        $restaurantID = 1;
-        $date = date("Y-m-d H:i:s");
-        $productsID = "";
-        $productsName = "";
-        if (count($urunler) > 1) {
-            foreach ($urunler as $product) {
-                $productsID .= $product["product_id"];
-                $productsName .= $product["product_name"];
-            }
-
-        } else {
-            $productsID = $urunler[0]["product_id"];
-            $productsName = $urunler[0]["product_name"];
+        foreach ($urunler as $urunn) {
+            $productID = $urunn["product_id"];
+            $productName = $urunn["product_name"];
+            $product_price = $urunn["product_price"];
+            $date = date("Y-m-d H:i:s");
+            $userID = $_SESSION["user_id"];
+            $restaurantID = 1;
+            $combine_id = $_SESSION["user_id"] . time();
+            //mysql
+            $sql = "insert into orders(product_id,product_name,product_price,date,user_id,restaurant_id,combine_id) values (?, ?, ?, ?, ?, ?, ?)";
+            $sth = $dbconn->prepare($sql);
+            $sth->execute([$productID, $productName, $product_price, $date, $userID, $restaurantID, $combine_id]);
         }
-
-
-        $sql = "insert into orders(product_id,product_name,order_total,date,user_id,restaurant_id) values (?, ?, ?, ?, ?, ?)";
-        $query = $dbconn->prepare($sql);
-        $query->bindParam(1, $productsID, PDO::PARAM_STR);
-        $query->bindParam(2, $productsName, PDO::PARAM_STR);
-        $query->bindParam(3, $total_price, PDO::PARAM_STR);
-        $query->bindParam(4, $date, PDO::PARAM_STR);
-        $query->bindParam(5, $_SESSION["user_id"], PDO::PARAM_STR);
-        $query->bindParam(6, $restaurantID, PDO::PARAM_STR);
-        $insert_result = $query->execute();
-
         header("Location: sepet.php");
     }
 

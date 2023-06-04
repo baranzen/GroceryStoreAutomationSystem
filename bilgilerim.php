@@ -8,7 +8,6 @@ $userInformation = $query->fetch(PDO::FETCH_ASSOC);
 
 $userName = $userInformation["user_name"];
 $userSurname = $userInformation["user_surname"];
-$userPassword = $userInformation["user_password"];
 $userTel = $userInformation["user_tel"];
 $userAdress = $userInformation["user_adress"];
 ?>
@@ -64,11 +63,6 @@ $userAdress = $userInformation["user_adress"];
                 <label for="exampleInputEmail1">Soyad</label>
                 <input name="surname" type="text" class="form-control" required id="exampleInputEmail1"
                     aria-describedby="emailHelp" placeholder="Soyad" value="<?php echo $userSurname ?>">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Sifre</label>
-                <input name="password" type="password" required class="form-control" id="exampleInputPassword1"
-                    placeholder="Sifre">
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Tel</label>

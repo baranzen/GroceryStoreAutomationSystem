@@ -29,7 +29,10 @@ if (!isset($_SESSION["admin_id"])) {
         </a>
 
 
-        <p>Restaurant1 - admin</p>
+        <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+            <p>Restaurant1 - admin</p>
+            <?php require_once("cikis-yap.php"); ?>
+        </div>
 
     </header>
 

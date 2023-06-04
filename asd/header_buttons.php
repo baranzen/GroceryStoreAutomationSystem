@@ -1,6 +1,6 @@
 <?php
 session_start();
-// user session bos ise
+
 if (!isset($_SESSION["user_id"])) {
     ?>
     <a href="giris-yap.php">
@@ -17,15 +17,26 @@ if (!isset($_SESSION["user_id"])) {
 
     <?php
 } else {
+
+    require_once("conn.php");
+    $userID = $_SESSION["user_id"];
+    $query = $dbconn->prepare("SELECT * FROM users WHERE user_id = ?");
+    $query->execute([$userID]);
+    $userInformation = $query->fetch(PDO::FETCH_ASSOC);
+        
     ?>
     <div class="dropdown" style="margin-right: 10px;">
         <button class="btn btn-secondary dropdown-toggle basket" type="button" id="dropdownMenuButton"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa-solid fa-user" style="color: #ffffff;"></i>
+            <label style="margin-left: 5px;"><?php echo $userInformation["user_name"] ?></label>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a href="bilgilerim.php">
-                <button class="dropdown-item" href="#">Bilgilerim</button>
+                <button class="dropdown-item">Bilgilerim</button>
+            </a>
+            <a href="siparislerim.php">
+                <button class="dropdown-item" >Siparislerim</button>
             </a>
             <form action="#" method="POST">
                 <button type="submit" name="logOut" class="dropdown-item" href="#">Oturumu kapat</button>

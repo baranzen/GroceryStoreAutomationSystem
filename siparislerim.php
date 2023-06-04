@@ -1,10 +1,3 @@
-<?php
-session_start();
-if (!isset($_SESSION["admin_id"])) {
-    header("Location: admin-giris.php");
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,28 +6,30 @@ if (!isset($_SESSION["admin_id"])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Getirme | Anasayfa </title>
-    <link rel="stylesheet" href="../reset.css">
-    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="../restaurant-proje/index.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/a20f77a62b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
 
 
     <header>
-        <!--  <a href="../restaurant-proje/">
-            <h1> Getirme </h1>
-        </a> -->
-
-        <a href="../">
+    <a href="../restaurant-proje/">
             <div class="site-logo"></div>
         </a>
+        <div class="buttons">
+            <?php require_once("asd/header_buttons.php"); ?>
 
-
-        <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-            <p>Restaurant1 - admin</p>
-            <?php require_once("cikis-yap.php"); ?>
+            <a href="sepet.php">
+                <button class="basket">
+                    <i class="fa-solid fa-basket-shopping" style="color: #FFFFE8;"></i>
+                </button>
+            </a>
+            
         </div>
 
     </header>
@@ -48,19 +43,15 @@ if (!isset($_SESSION["admin_id"])) {
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Ad</th>
-                            <th scope="col">Tel</th>
-                            <th scope="col">Adres</th>
                             <th scope="col">Urun*ler</th>
                             <th scope="col">Urun Adedi</th>
-                            <th scope="col">Tutar</th>
+                            <th scope="col">Restaurant</th>
+                            <th scope="col">Tarih</th>
+                            <th scope="col">Toplam</th>
                         </tr>
                     </thead>
                     <tbody>
-
-                        <?php require_once("../asd/orders-card.php") ?>
-
+                        <?php require_once("asd/user-orders.php") ?>
                     </tbody>
                 </table>
 

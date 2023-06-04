@@ -87,12 +87,10 @@ main {
 
 }
 
-.admin-grid>div {
-    background-color: #FFD4D4;
+.admin-grid div {
+    background-color: #AACB73;
     border-radius: 10px;
     padding: 30px;
-
-
     display: flex;
     align-items: center;
     justify-content: center;
