@@ -1,1 +1,3 @@
-# GroceryStoreAutomationSystem for final project
+# GroceryStoreAutomationSystem
+
+GroceryStoreAutomationSystem for final project
