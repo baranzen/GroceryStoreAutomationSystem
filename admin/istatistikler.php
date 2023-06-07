@@ -46,7 +46,19 @@ if (!isset($_SESSION["admin_id"])) {
 
 
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-            <p>Restaurant1 - admin</p>
+            <?php
+            require_once("../conn.php");
+            session_start();
+            $admin_id = $_SESSION["admin_id"];
+            $sql = "select admin_name from admins where restaurant_id = $admin_id";
+            $sth = $dbconn->prepare($sql);
+            $sth->execute();
+            $adminnnn = $sth->fetch(PDO::FETCH_ASSOC)["admin_name"];
+            ?>
+            <p>
+                <?php echo $adminnnn; ?>
+            </p>
+
             <?php require_once("cikis-yap.php"); ?>
         </div>
 
@@ -72,7 +84,9 @@ if (!isset($_SESSION["admin_id"])) {
             }
             function totalOrder($dbconn)
             {
-                $sql = "select * from orders where restaurant_id = 1";
+                session_start();
+                $admin_id = $_SESSION["admin_id"];
+                $sql = "select * from orders where restaurant_id = $admin_id";
                 $sth = $dbconn->prepare($sql);
                 $sth->execute();
                 $orders = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -92,7 +106,9 @@ if (!isset($_SESSION["admin_id"])) {
 
             function totalGiro($dbconn)
             {
-                $sql = "SELECT SUM(product_price) from orders where restaurant_id = 1";
+                session_start();
+                $admin_id = $_SESSION["admin_id"];
+                $sql = "SELECT SUM(product_price) from orders where restaurant_id =  $admin_id";
                 $result = $dbconn->query($sql);
                 $row = $result->fetch(PDO::FETCH_ASSOC);
                 return $row["SUM(product_price)"];
@@ -100,14 +116,62 @@ if (!isset($_SESSION["admin_id"])) {
 
             function totalProducts($dbconn)
             {
-                $sql = "SELECT COUNT(*)from orders where restaurant_id = 1";
+                session_start();
+                $admin_id = $_SESSION["admin_id"];
+                $sql = "SELECT COUNT(*)from orders where restaurant_id = $admin_id";
                 $result = $dbconn->query($sql);
                 $row = $result->fetch(PDO::FETCH_ASSOC);
                 return $row["COUNT(*)"];
             }
-            require_once("../conn.php");
+
+            function mostOrderedProduct($dbconn)
+            {
+                session_start();
+                $admin_id = $_SESSION["admin_id"];
+                $sql = "select * from orders where restaurant_id = $admin_id";
+                $sth = $dbconn->prepare($sql);
+                $sth->execute();
+                $orders = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+                $groupedOrders = array();
+                foreach ($orders as $order) {
+                    $combineId = $order["combine_id"];
+                    if (isset($groupedOrders[$combineId])) {
+                        $groupedOrders[$combineId][] = $order;
+                    } else {
+                        $groupedOrders[$combineId] = array($order);
+                    }
+                }
+                $groupedOrders = array_reverse($groupedOrders, false);
+                //return product_name
+            
+                $productCount = array();
+                foreach ($groupedOrders as $order) {
+                    foreach ($order as $product) {
+                        $product_name = $product["product_name"];
+                        if (isset($productCount[$product_name])) {
+                            $productCount[$product_name]++;
+                        } else {
+                            $productCount[$product_name] = 1;
+                        }
+                    }
+                }
+
+                $mostOrderedProduct = array_keys($productCount, max($productCount));
+                return $mostOrderedProduct[0];
+            }
+
             ?>
-            <div class="admin-grid">
+            <div class="admin-grid" style="    grid-template-columns: 1fr 1fr 1fr 1fr;">
+                <div>
+                    <div>
+                        <i class="fa-solid fa-burger" style="color: #ffffff;"></i>
+                    </div>
+                    <a href="urunler.php">
+                        Trend urun:
+                        <?php echo mostOrderedProduct($dbconn); ?>
+                    </a>
+                </div>
                 <div>
                     <div> <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></div>
                     <a href="siparisler.php">
@@ -133,6 +197,7 @@ if (!isset($_SESSION["admin_id"])) {
                         <?php echo totalGiro($dbconn); ?>
                     </a>
                 </div>
+
             </div>
 
         </div>

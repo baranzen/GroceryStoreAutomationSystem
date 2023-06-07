@@ -67,7 +67,7 @@ main {
 
 .restaurant {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; 
     align-items: center;
     justify-content: center;
     justify-items: center;
@@ -84,7 +84,6 @@ main {
     justify-content: center;
     justify-items: center;
     margin-top: 30px;
-
 }
 
 .admin-grid div {

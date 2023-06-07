@@ -46,8 +46,7 @@ if ($sepet != null) {
 
         <?php
     }
-}
-else{
+} else {
     echo "Sepetinizde ürün bulunmamaktadır.";
 }
 
@@ -55,6 +54,14 @@ if (isset($_POST["btn"])) {
 
     $product_id = $_POST["btn"];
     $sepet = array_diff($sepet, array($product_id));
+    // urunun restaurant idsini getir
+    $sql = "select restaurant_id from products where product_id = $product_id";
+    $sth = $dbconn->prepare($sql);
+    $sth->execute();
+    $restaurant_id = $sth->fetch(PDO::FETCH_ASSOC)["restaurant_id"];
+    $_SESSION["sepetRestaurantID"] = array_diff($_SESSION["sepetRestaurantID"], array($restaurant_id));
+
+
     $_SESSION["sepet"] = $sepet;
     header("Location: ../restaurant-proje/sepet.php");
 }

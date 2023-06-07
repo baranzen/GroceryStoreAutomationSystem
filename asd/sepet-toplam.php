@@ -2,7 +2,17 @@
 require_once("conn.php");
 
 session_start();
+$restaurantID = $_SESSION["sepetRestaurantID"];
+
+if (count($restaurantID) > 1) {
+    unset($_SESSION["sepet"]);
+    unset($_SESSION["sepetRestaurantID"]);
+    echo "<script>alert('Sepette birden fazla restorant var. Lütfen tek restorant seçiniz.')</script>";
+    header("index.php");
+} 
+
 $sepet = $_SESSION["sepet"];
+print_r($_SESSION["sepetRestaurantID"]);
 
 
 $urunler = array();
@@ -67,13 +77,14 @@ if (isset($_POST["order"]) && !empty($sepet)) {
     } else {
         
         unset($_SESSION["sepet"]);
+        unset($_SESSION["sepetRestaurantID"]);
         foreach ($urunler as $urunn) {
             $productID = $urunn["product_id"];
             $productName = $urunn["product_name"];
             $product_price = $urunn["product_price"];
             $date = date("Y-m-d H:i:s");
             $userID = $_SESSION["user_id"];
-            $restaurantID = 1;
+            $restaurantID = $urunn["restaurant_id"];
             $combine_id = $_SESSION["user_id"] . time();
             //mysql
             $sql = "insert into orders(product_id,product_name,product_price,date,user_id,restaurant_id,combine_id) values (?, ?, ?, ?, ?, ?, ?)";
@@ -84,4 +95,5 @@ if (isset($_POST["order"]) && !empty($sepet)) {
     }
 
 }
+
 ?>

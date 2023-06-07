@@ -1,7 +1,9 @@
 <?php
 
 require_once("../conn.php");
-$sql = "select * from orders where restaurant_id = 1";
+session_start();
+$admin_id = $_SESSION["admin_id"];
+$sql = "select * from orders where restaurant_id = $admin_id";
 $sth = $dbconn->prepare($sql);
 $sth->execute();
 $orders = $sth->fetchAll(PDO::FETCH_ASSOC);

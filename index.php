@@ -57,14 +57,10 @@
     </div>
 
     <main>
-        <p class="restaurant-title">
-            Restaurant 1
-        </p>
-        <div class="restaurant">
             <?php
             require_once("asd/restaurant-card.php");
             ?>
-        </div>
+
     </main>
 
     <footer>

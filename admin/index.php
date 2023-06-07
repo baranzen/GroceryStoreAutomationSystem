@@ -1,11 +1,10 @@
 <?php
+
 session_start();
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin-giris.php");
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +30,8 @@ if (!isset($_SESSION["admin_id"])) {
             align-items: center;
             padding: 30px;
         }
-        .admin-grid i{
+
+        .admin-grid i {
             font-size: 30px;
         }
     </style>
@@ -51,7 +51,19 @@ if (!isset($_SESSION["admin_id"])) {
 
 
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-            <p>Restaurant1 - admin</p>
+            <?php
+            /* print($_SESSION["admin_id"]); */
+            require_once("../conn.php");
+            session_start();
+            $admin_id = $_SESSION["admin_id"];
+            $sql = "select admin_name from admins where restaurant_id = $admin_id";
+            $sth = $dbconn->prepare($sql);
+            $sth->execute();
+            $adminnnn = $sth->fetch(PDO::FETCH_ASSOC)["admin_name"];
+            ?>
+            <p>
+                <?php echo $adminnnn; ?>
+            </p>
             <?php require_once("cikis-yap.php"); ?>
         </div>
     </header>
@@ -59,7 +71,7 @@ if (!isset($_SESSION["admin_id"])) {
 
     <main>
         <h1>Admin Paneli</h1>
-        <div class="admin-grid">
+        <div class="admin-grid" style="    grid-template-columns: 1fr 1fr 1fr 1fr;">
             <div>
                 <div> <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></div>
                 <a href="siparisler.php">
@@ -82,8 +94,6 @@ if (!isset($_SESSION["admin_id"])) {
                     Yeni Urun Ekle
                 </a>
             </div>
-        </div>
-        <div class="admin-grid">
             <div>
                 <div><i class="fa-solid fa-arrow-down-wide-short" style="color: #ffffff;"></i></div>
                 <a href="istatistikler.php">

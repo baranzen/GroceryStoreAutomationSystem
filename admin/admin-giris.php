@@ -56,7 +56,7 @@ require_once("../conn.php");
 if(isset($_POST["girisYap"])){
     session_start();
     $name = $_POST["name"];
-    $password = $_POST["password"];
+    $password = md5($_POST["password"]);
     
 
     $query = $dbconn->prepare("SELECT * FROM admins WHERE admin_name = ? AND admin_password = ?");
@@ -64,7 +64,7 @@ if(isset($_POST["girisYap"])){
     $result = $query->fetch(PDO::FETCH_ASSOC);
 
     if ($result) {
-        $_SESSION["admin_id"] = $result["admin_id"];
+        $_SESSION["admin_id"] = $result["restaurant_id"];
         header("Refresh:0; url=../admin/");
     } else {
         echo "<script>alert('Giris Basarisiz!');</script>";

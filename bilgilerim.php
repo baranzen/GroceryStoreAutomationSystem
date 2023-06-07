@@ -76,6 +76,16 @@ $userAdress = $userInformation["user_adress"];
             </div>
             <button type="submit" name="update" class="btn btn-primary">Guncelle</button>
         </form>
+        <br>
+        <form method="POST">
+            <h2>Sifre degistir</h2>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Sifre</label>
+                <input name="password" type="password" required class="form-control" id="exampleInputPassword1"
+                    placeholder="Sifre">
+            </div>
+            <button type="submit" name="passwordUpdate" class="btn btn-primary">Guncelle</button>
+        </form>
     </main>
 
     <footer style="position: absolute;bottom: 0;"></footer>
@@ -98,6 +108,22 @@ if (isset($_POST["update"])) {
 
     $query = $dbconn->prepare("UPDATE users SET user_name = ?, user_surname = ?, user_tel = ?, user_adress = ? WHERE user_id = ?");
     $query->execute([$name, $surname, $tel, $adress, $userID]);
+    if ($query) {
+        echo "<script>window.location.href='bilgilerim.php';</script>";
+    } else {
+        echo "bir hata olustu";
+    }
+}
+if (isset($_POST["passwordUpdate"])) {
+    require_once("conn.php");
+
+    session_start();
+    $password = md5($_POST["password"]);
+    $userID = $_SESSION["user_id"];
+    print($userID);
+    $query = $dbconn->prepare("UPDATE users SET user_password = $password WHERE user_id = $userID");
+    $query->execute([$password, $userID]);
+
     if ($query) {
         echo "<script>window.location.href='bilgilerim.php';</script>";
     } else {
