@@ -1,7 +1,15 @@
 <?php
+// veri tabanı bağlantısı
 require_once("conn.php");
+// session başlatma
 session_start();
 
+/* 
+Yönetici sayfası doğrulama işlemi.
+Burada yapılan işlem: veri tabanında owner tablosunda oluşturulan yonetici 
+id si ilen sessionda tutulan user id eşit ise yonetici.php sayfasına erişim sağlanır.
+ Eğer eşit değil ise anasayfaya yönlendirilir.
+ */
 $sql = "select * from owner";
 $sth = $dbconn->prepare($sql);
 $sth->execute();
@@ -94,6 +102,10 @@ $owner_id == $_SESSION["user_id"] ? $owner_id : header("Refresh:0; url=../restau
                     </thead>
                 </table>
                 <?php
+                /* 
+                Burada yapılan işlemde: yöneticinin eklediği restoranları
+                 veri tabanından çekip foreach ile ekrana yazdırıyoruz.
+                 */
                 require_once("conn.php");
                 $sql = "select * from restaurants";
                 $sth = $dbconn->prepare($sql);
@@ -133,33 +145,41 @@ $owner_id == $_SESSION["user_id"] ? $owner_id : header("Refresh:0; url=../restau
 
 
 <?php
+// restoran ekleme işlemi
+// Ekle butonuna basıldığında tetıklenir.
 if (isset($_POST["addRestaurant"])) {
+    // post ile html içerisindeki name taglerinin değerlerini alıyoruz.
     $restaurantName = $_POST["restaurantName"];
     $restaurantPassword = md5($_POST["restaurantPassword"]);
+    // restaurants tablosuna restoran ekliyoruz.
     $sql = "insert into restaurants (restaurant_name) values ('$restaurantName')";
     $sth = $dbconn->prepare($sql);
     $sth->execute();
-
+    // restoran ekledikten sonra restoranın id sini alıyoruz.
     $sql = "select * from restaurants where restaurant_name = '$restaurantName'";
     $sth = $dbconn->prepare($sql);
-
     $sth->execute();
     $restaurant = $sth->fetchAll(PDO::FETCH_ASSOC);
+    /*     restoran id sini kullanarak admin tablosuna restoranın 
+    yöneticisini ekliyoruz böylece admin panelıne giriş yapabilecek. */
     $restaurantID = $restaurant[0]["restaurant_id"];
     $sql = "insert into admins (admin_name,admin_password,restaurant_id) values ('$restaurantName','$restaurantPassword',$restaurantID)";
     $sth = $dbconn->prepare($sql);
     $sth->execute();
-
-
-
-    header("yonetici.php");
+    // işlem bittikten sonra sayfayı yeniliyoruz.
+    header("Refresh:0; url=../yonetici.php/");
 }
-
+// restoran silme işlemi
+// sil butonuna basıldığında tetıklenir.
 if (isset($_POST["removeRestaurant"])) {
+    /*      burada sil butonuna basıldığında hangi restorantın silinmesi gerektiğini ayırt 
+    edebilmemiz için butondan gelen restaurant_id value değerini post ile çekiyoruz */
     $restaurantID = $_POST["removeRestaurant"];
+    // restorantı resutraunts tablosundan butondan gelen id ile eşleşen stünu siliyoruz.
     $sql = "delete from restaurants where restaurant_id = $restaurantID";
     $sth = $dbconn->prepare($sql);
     $sth->execute();
+    // sayfayı yeniliyoruz.
     header("Refresh:0; url=../yonetici.php");
 }
 ?>

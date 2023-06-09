@@ -20,15 +20,15 @@
 
 
     <header>
-        <!--  <a href="../restaurant-proje/">
-            <h1> Getirme </h1>
-        </a> -->
+
         <a href="../restaurant-proje/">
             <div class="site-logo"></div>
         </a>
 
         <div class="buttons">
-            <?php require_once("asd/header_buttons.php"); ?>
+            <?php
+            //clean code için header_buttons.php dosyası oluşturuldu.
+            require_once("asd/header_buttons.php"); ?>
 
             <a href="sepet.php">
                 <button class="basket">
@@ -44,12 +44,14 @@
         <div>
             <div class="basket-card">
                 <?php
+                //clean code için sepet-card.php dosyası oluşturuldu.
                 require_once("asd/sepet-card.php");
                 ?>
             </div>
             <div class="basket-right"
                 style="display: flex;flex-direction: column;justify-content: space-between;height: auto;padding: 15px;">
                 <?php
+                //clean code için sepet-toplam.php dosyası oluşturuldu.
                 require_once("asd/sepet-toplam.php")
                     ?>
             </div>

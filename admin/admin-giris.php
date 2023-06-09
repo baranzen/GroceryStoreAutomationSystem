@@ -52,16 +52,24 @@
 </html>
 
 <?php
+
+// veritabanı bağlantısı
 require_once("../conn.php");
 
+// eğer formdan giriş yap butonuna basıldıysa
 if (isset($_POST["girisYap"])) {
+    //session başlat
     session_start();
+    // post ile html nametaglerinden gelen name ve password değerlerini alıyoruz.
     $name = $_POST["name"];
+    // şifreyi md5 ile şifreleyiyoruz.
     $password = md5($_POST["password"]);
 
-
+    // veritabanından gelen name ve password değerlerini kontrol ediyoruz.
+    // burada post ile gelen şifre hem veritabanında hem de sessionda md5 ile şifrelenmiş olduğu için bir sıkıntı olmuyor.
     $query = $dbconn->prepare("SELECT * FROM admins WHERE admin_name = ? AND admin_password = ?");
     $query->execute([$name, $password]);
+    // eğer veritabanında böyle bir kullanıcı varsa sessiona admin_id yi atıyoruz ve admin paneline yönlendiriyoruz.
     $result = $query->fetch(PDO::FETCH_ASSOC);
 
     if ($result) {

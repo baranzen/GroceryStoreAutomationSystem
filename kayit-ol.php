@@ -25,7 +25,9 @@
         </a>
 
         <div class="buttons">
-            <?php require_once("asd/header_buttons.php"); ?>
+            <?php
+            // clean code için header_buttons.php dosyası oluşturuldu.
+            require_once("asd/header_buttons.php"); ?>
         </div>
     </header>
 
@@ -73,16 +75,20 @@
 </html>
 
 <?php
-
+// veri tabanı bağlantısı
 require_once("conn.php");
 
+//kayıt olma işlemi
+// kayıt ol butonuna basıldığında tetiklenir.
 if (isset($_POST['kayitOl'])) {
+    // post ile html içerisindeki name taglerinin değerlerini alıyoruz.
     $name = $_POST['name'];
     $surName = $_POST['surName'];
+    // girilen şifreyi md5 ile şifreliyoruz.
     $password = md5($_POST['password']);
     $number = $_POST['number'];
     $adress = $_POST['adress'];
-
+    // sql sorgusu ile users tablosuna kayıt ekliyoruz.
     $sql = "insert into users(user_name,user_surname,user_password,user_tel,user_adress) values(?,?,?,?,?)";
 
     $query = $dbconn->prepare($sql);
@@ -94,7 +100,7 @@ if (isset($_POST['kayitOl'])) {
     $query->bindParam(5, $adress, PDO::PARAM_STR);
 
     $insert_result = $query->execute();
-
+    // eğer kayıt başarılı ise giriş sayfasına yönlendiriyoruz, değilse kullanıcıya hata mesajı veriyoruz.
     if ($query) {
         header("Location: giris-yap.php");
     } else {

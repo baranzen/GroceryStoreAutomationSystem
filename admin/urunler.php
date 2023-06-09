@@ -1,4 +1,6 @@
 <?php
+
+// session başlatarak tarayıcı belleğindeki admin_id değerini alıp admin kontrolü yapıyoruz.
 session_start();
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin-giris.php");

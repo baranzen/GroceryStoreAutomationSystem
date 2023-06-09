@@ -1,6 +1,11 @@
 <?php
+// bu sayfada dinamik olan butonlarımızın kontrolünü yapıyoruz.
+// ve clean code olması için header_buttons.php dosyasına taşıdık.
+// bu işlem birçok sayfada tekrarlandığı için bu sayfaya taşıdık.
+// session başlatma
 session_start();
 
+// eğer kullanıcı giriş yapmamışsa giriş yap ve kayıt ol butonlarını gösteriyoruz.
 if (!isset($_SESSION["user_id"])) {
     ?>
     <a href="giris-yap.php">
@@ -17,11 +22,17 @@ if (!isset($_SESSION["user_id"])) {
 
     <?php
 } else {
+    // eğer kullanıcı giriş yapmışsa bilgilerim ve çıkış yap butonlarını gösteriyoruz.
+    // ayrıca kullanıcı adını da yazdırıyoruz ve bir user iconu ekliyoruz.
 
+    // veritabanı bağlantısını dahil ediyoruz.
     require_once("conn.php");
+    // user id değerini alıyoruz.
     $userID = $_SESSION["user_id"];
+    // user id değerine göre users tablosundan verileri çekiyoruz.
     $query = $dbconn->prepare("SELECT * FROM users WHERE user_id = ?");
     $query->execute([$userID]);
+    // users tablosundan gelen verileri $userInformation değişkenine atıyoruz.
     $userInformation = $query->fetch(PDO::FETCH_ASSOC);
 
     ?>
@@ -29,7 +40,9 @@ if (!isset($_SESSION["user_id"])) {
         <button class="btn btn-secondary dropdown-toggle basket" type="button" id="dropdownMenuButton"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <?php
-
+            /* burada eğer owner tablosundaki user_id ile sessiondaki user_id eşleşiyorsa
+            admin olarak cıvata anahtarı ikonu gösteriyoruz , eğer eşleşmiyorsa
+            user ikonu gösteriyoruz */
             $sql = "select * from owner";
             $sth = $dbconn->prepare($sql);
             $sth->execute();
@@ -58,7 +71,8 @@ if (!isset($_SESSION["user_id"])) {
                 <button class="dropdown-item">Siparislerim</button>
             </a>
             <?php
-
+            /* burada eğer owner tablosundaki user_id ile sessiondaki user_id eşleşiyorsa
+                      yönetici panel kısmını dropdown a ekliyoruz */
             $sql = "select * from owner";
             $sth = $dbconn->prepare($sql);
             $sth->execute();
@@ -87,9 +101,12 @@ if (!isset($_SESSION["user_id"])) {
     </div>
     <?php
 }
+
+// logout işlemi
 if (isset($_POST["logOut"])) {
     // user_id session'ı silinir
     unset($_SESSION["user_id"]);
+    // oturum kapatılır ve index.php'ye yönlendirilir.
     header("Location: index.php");
 }
 

@@ -18,18 +18,21 @@
 
 
     <header>
-    <a href="../restaurant-proje/">
+        <a href="../restaurant-proje/">
             <div class="site-logo"></div>
         </a>
         <div class="buttons">
-            <?php require_once("asd/header_buttons.php"); ?>
+            <?php
+            // clean code için header buttonları ayrı bir dosyada tutuluyor
+            require_once("asd/header_buttons.php");
+            ?>
 
             <a href="sepet.php">
                 <button class="basket">
                     <i class="fa-solid fa-basket-shopping" style="color: #FFFFE8;"></i>
                 </button>
             </a>
-            
+
         </div>
 
     </header>
@@ -51,7 +54,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php require_once("asd/user-orders.php") ?>
+                        
+                        <?php 
+                        // clean code için siparişler ayrı bir dosyada tutuluyor
+                        require_once("asd/user-orders.php") ?>
                     </tbody>
                 </table>
 

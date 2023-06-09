@@ -19,14 +19,14 @@
 <body>
 
     <header>
-        <!--   <a href="../restaurant-proje/">
-            <h1> Getirme </h1>
-        </a> -->
         <a href="../restaurant-proje/">
             <div class="site-logo"></div>
         </a>
         <div class="buttons">
-            <?php require_once("asd/header_buttons.php"); ?>
+
+            <?php
+            // clean code için header_buttons.php dosyası oluşturuldu.
+            require_once("asd/header_buttons.php"); ?>
         </div>
     </header>
 
@@ -59,18 +59,25 @@
 </html>
 
 <?php
-
+// veritabanı bağlantısı.
 require_once("conn.php");
 
+// giris yapma işlemi.
+// giriş yap butonu basılınca tetiklenir.
 if (isset($_POST["girisYap"])) {
+    // session başlatılır.
     session_start();
+
+    // post ile html içerisindeki name taglerinin değerlerini alıyoruz.
     $name = $_POST["name"];
     $password = md5($_POST["password"]);
-
+    // sql sorgusu ile veritabanından kullanıcı adı ve şifre kontrolü yapılır.
     $query = $dbconn->prepare("SELECT * FROM users WHERE user_name = ? AND user_password = ?");
+    // burada değişkenleri sırayla yazıyoruz.
     $query->execute([$name, $password]);
     $result = $query->fetch(PDO::FETCH_ASSOC);
-
+    // eğer kullanıcı adı ve şifre doğruysa sessiona user_id değeri atanır ve anasayfaya yönlendirilir ki session sayesinde her penrede kullanıcı giriş yapmış gözüksün.
+// eğer kullanıcı adı ve şifre yanlışsa hata mesajı verilir.
     if ($result) {
         $_SESSION["user_id"] = $result["user_id"];
         header("Refresh:0; url=../restaurant-proje/");

@@ -1,4 +1,7 @@
 <?php
+// bu sayfada adminin ürün ekleyebilmesi için bir form oluşturuyoruz.
+
+// session başlatarak tarayıcı belleğindeki admin_id değerini alıp admin kontrolü yapıyoruz.
 session_start();
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin-giris.php");
@@ -79,14 +82,16 @@ if (!isset($_SESSION["admin_id"])) {
 </html>
 
 <?php
-
+// veritabanı bağlantısını dahil ediyoruz.
 require_once("../conn.php");
 
+// ürün ekleme işlemi
 if (isset($_POST["btn"])) {
+    // post ile html name taglarından gelen değerleri alıyoruz.
     $productName = $_POST["productName"];
     $productPrice = $_POST["productPrice"];
     $productUrl = $_POST["productUrl"];
-
+    // ürün ekleme sql sorgusu
     $sql = "insert into products(product_name,product_price, product_url,restaurant_id)values(?,?,?,?)";
 
     $query = $dbconn->prepare($sql);

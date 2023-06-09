@@ -1,11 +1,16 @@
 <?php
+//session başlatılır.
 session_start();
+//veritabanı bağlantısı.
 require_once("conn.php");
+// giriş yaparken oluşan session user_id değerini çekiyoruz.
 $userID = $_SESSION["user_id"];
+/*  users tablosundan user_id değerine göre 
+kullanıcı bilgilerini filtreleyip çekiyoruz */
 $query = $dbconn->prepare("SELECT * FROM users WHERE user_id = ?");
 $query->execute([$userID]);
 $userInformation = $query->fetch(PDO::FETCH_ASSOC);
-
+// $userInformation dizi içersindeki bilgileri parçalıyoruz.
 $userName = $userInformation["user_name"];
 $userSurname = $userInformation["user_surname"];
 $userTel = $userInformation["user_tel"];
@@ -53,7 +58,8 @@ $userAdress = $userInformation["user_adress"];
         <h1>Bilgilerim</h1>
 
         <form method="POST">
-
+            <!-- Burada kullanıcı bilgilerini inputların valuelarına geçiyoruz
+ ki kullanıcı kendi bilgilerini görüp üstünde güncelleme yapabilesin. -->
             <div class="form-group">
                 <label for="exampleInputEmail1">Ad</label>
                 <input name="name" type="text" class="form-control" required id="exampleInputEmail1"
@@ -98,30 +104,44 @@ $userAdress = $userInformation["user_adress"];
 </html>
 
 <?php
+// veritabanı bağlantısı
 require_once("conn.php");
-if (isset($_POST["update"])) {
 
+// user bilgileri güncelleme işlemi
+// güncelle butonuna basıldığında tetiklenir.
+if (isset($_POST["update"])) {
+    // post ile html name taglarından gelen bilgileri alıyoruz.
     $name = $_POST["name"];
     $surname = $_POST["surname"];
     $tel = $_POST["tel"];
     $adress = $_POST["adress"];
 
+    // burada yukarıdaki session user_id ile eşleşen userın bilgilerini güncelliyoruz.
     $query = $dbconn->prepare("UPDATE users SET user_name = ?, user_surname = ?, user_tel = ?, user_adress = ? WHERE user_id = ?");
+    // burada değişkenleri sırayla yazıyoruz.
     $query->execute([$name, $surname, $tel, $adress, $userID]);
+    // eğer güncelleme başarılıysa bilgilerim sayfasına yönlendiriyoruz.
+    // eğer güncelleme başarısızsa bir hata oluştu diyoruz.
     if ($query) {
         echo "<script>window.location.href='bilgilerim.php';</script>";
     } else {
         echo "bir hata olustu";
     }
 }
+
+// şifre güncelleme işlemi
+// şifre güncelle butonuna basıldığında tetiklenir.
 if (isset($_POST["passwordUpdate"])) {
-    ;
+    // post ile html name taglarından gelen bilgileri alıyoruz.
+    // şifreyi md5 ile şifreliyoruz.
     $password = md5($_POST["password"]);
+    // burada yukarıdaki session user_id ile eşleşen userın şifresini güncelliyoruz.
     $query = $dbconn->prepare("UPDATE users SET user_password = '$password' WHERE user_id = $userID");
     $query->execute();
-/*     print($userID); */
+    /*     print($userID); */
 
-
+    // eğer güncelleme başarılıysa bilgilerim sayfasına yönlendiriyoruz.
+// eğer güncelleme başarısızsa bir hata oluştu diyoruz.
     if ($query) {
         echo "<script>alert('Sifreniz basariyla degistirildi');</script>";
         echo "<script>window.location.href='bilgilerim.php';</script>";

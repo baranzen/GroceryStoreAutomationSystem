@@ -1,4 +1,8 @@
 <?php
+// bu sayfada admine restaurant istatistiklerini gösteriyoruz.
+
+
+// session başlatarak tarayıcı belleğindeki admin_id değerini alıp admin kontrolü yapıyoruz.
 session_start();
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin-giris.php");
@@ -60,7 +64,7 @@ if (!isset($_SESSION["admin_id"])) {
         <div>
             <?php
 
-
+            // veritabanı bağlantısı
             $host = "localhost";
             $dbName = "getirme";
             $root = "root";
@@ -72,85 +76,133 @@ if (!isset($_SESSION["admin_id"])) {
             } catch (PDOException $e) {
                 echo "hata: " . $e;
             }
+
+            // sipariş sayısını hesaplayan fonksiyon dbconn veritabanı bağlantısını parametre olarak alıyor.
             function totalOrder($dbconn)
             {
+                // session başlatma
                 session_start();
+                // admin id değerini alıyoruz.
                 $admin_id = $_SESSION["admin_id"];
+                // admin id değerine göre siparişleri çekiyoruz.
                 $sql = "select * from orders where restaurant_id = $admin_id";
                 $sth = $dbconn->prepare($sql);
                 $sth->execute();
+                // siparişleri $orders değişkenine atıyoruz.
                 $orders = $sth->fetchAll(PDO::FETCH_ASSOC);
 
+                /*
+    orders tablosundan gelen verileri combine_id değerine göre grupluyoruz.combine_id 
+ değeri aynı anda sipariş verilmiş ürünler  bir array içerisine alıyoruz. 
+ */
                 $groupedOrders = array();
                 foreach ($orders as $order) {
+                    // combine_id değerini alıyoruz.
                     $combineId = $order["combine_id"];
                     if (isset($groupedOrders[$combineId])) {
+                        // combine_id değeri aynı olanları bir array içerisine alıyoruz.
                         $groupedOrders[$combineId][] = $order;
                     } else {
+                        // combine_id değeri aynı olmayanları bir array içerisine alıyoruz.
                         $groupedOrders[$combineId] = array($order);
                     }
                 }
+                // burada arrayi ters çeviriyoruz ki en son eklenen en üstte gözüksün.
                 $groupedOrders = array_reverse($groupedOrders, false);
+                // arrayin uzunluğunu döndürüyoruz bu da sipariş sayısını veriyor.
                 return count($groupedOrders);
             }
-
+            // toplam giro hesaplayan fonksiyon dbconn veritabanı bağlantısını parametre olarak alıyor.
             function totalGiro($dbconn)
             {
+                // session başlatma
                 session_start();
+                // admin id değerini alıyoruz.
                 $admin_id = $_SESSION["admin_id"];
+                // admin id değerine göre product_price değerlerini topluyoruz.
                 $sql = "SELECT SUM(product_price) from orders where restaurant_id =  $admin_id";
                 $result = $dbconn->query($sql);
+                // row değişkenine topalanan değeri atıyoruz.
                 $row = $result->fetch(PDO::FETCH_ASSOC);
+                // toplam giro değerini döndürüyoruz.
                 return $row["SUM(product_price)"];
             }
 
+            // toplam ürün sayısını hesaplayan fonksiyon dbconn veritabanı bağlantısını parametre olarak alıyor.
             function totalProducts($dbconn)
             {
+                // session başlatma
                 session_start();
+                // admin id değerini alıyoruz.
                 $admin_id = $_SESSION["admin_id"];
+                // admin id değerine göre tüm stünların sayısını çekiyoruz.
                 $sql = "SELECT COUNT(*)from orders where restaurant_id = $admin_id";
                 $result = $dbconn->query($sql);
+                // row değişkenine topalanan değeri atıyoruz.
                 $row = $result->fetch(PDO::FETCH_ASSOC);
+                // toplam ürün sayısını döndürüyoruz.
                 return $row["COUNT(*)"];
             }
 
+            // en çok sipariş verilen ürünü hesaplayan fonksiyon. dbconn veritabanı bağlantısını parametre olarak alıyor.
             function mostOrderedProduct($dbconn)
             {
+                // session başlatma
                 session_start();
+                // admin id değerini alıyoruz.
                 $admin_id = $_SESSION["admin_id"];
+                // admin id değerine göre tüm stünların sayısını çekiyoruz.
                 $sql = "select * from orders where restaurant_id = $admin_id";
                 $sth = $dbconn->prepare($sql);
                 $sth->execute();
+                // siparişleri $orders değişkenine atıyoruz.
                 $orders = $sth->fetchAll(PDO::FETCH_ASSOC);
 
+                /*
+orders tablosundan gelen verileri combine_id değerine göre grupluyoruz.combine_id 
+değeri aynı anda sipariş verilmiş ürünler  bir array içerisine alıyoruz. 
+*/
                 $groupedOrders = array();
                 foreach ($orders as $order) {
+                    // combine_id değerini alıyoruz.
                     $combineId = $order["combine_id"];
                     if (isset($groupedOrders[$combineId])) {
+                        // combine_id değeri aynı olanları bir array içerisine alıyoruz.
                         $groupedOrders[$combineId][] = $order;
                     } else {
+                        // combine_id değeri aynı olmayanları bir array içerisine alıyoruz.
                         $groupedOrders[$combineId] = array($order);
                     }
                 }
+
+                // burada arrayi ters çeviriyoruz ki en son eklenen en üstte gözüksün.
                 $groupedOrders = array_reverse($groupedOrders, false);
                 //return product_name
+            
+                // burada en çok sipariş verilen ürünü hesaplıyoruz. 
+                // $productCount değişkenine ürün adını ve kaç adet sipariş verildiğini atıyoruz.
             
                 $productCount = array();
                 foreach ($groupedOrders as $order) {
                     foreach ($order as $product) {
+                        // product_name değerini alıyoruz.
                         $product_name = $product["product_name"];
+                        // eğer product_name değeri varsa bir arttırıyoruz.
                         if (isset($productCount[$product_name])) {
                             $productCount[$product_name]++;
                         } else {
+                            // eğer product_name değeri yoksa 1 atıyoruz.
                             $productCount[$product_name] = 1;
                         }
                     }
                 }
 
+                // array_keys fonksiyonu ile en çok sipariş verilen ürünün adını buluyoruz. bu şu yüzden kullandık çünkü arrayin içindeki değerleri bulmak için arrayin key değerlerine ihtiyacımız var.
                 $mostOrderedProduct = array_keys($productCount, max($productCount));
+                // en çok sipariş verilen ürünü döndürüyoruz.
                 return $mostOrderedProduct[0];
             }
-
+            /* ve html ile listeliyoruz */
             ?>
             <div class="admin-grid" style="    grid-template-columns: 1fr 1fr 1fr 1fr;">
                 <div>

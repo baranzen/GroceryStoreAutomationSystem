@@ -26,7 +26,10 @@
             <div class="site-logo"></div>
         </a>
         <div class="buttons">
-            <?php require_once("asd/header_buttons.php"); ?>
+            <?php
+            // clean code için header_buttons.php dosyası oluşturuldu.
+            require_once("asd/header_buttons.php");
+            ?>
 
             <a href="sepet.php">
                 <button class="basket">
@@ -58,6 +61,7 @@
 
     <main>
         <?php
+        // clean code için restaurant-card.php dosyası oluşturuldu.
         require_once("asd/restaurant-card.php");
         ?>
 

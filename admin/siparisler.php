@@ -1,4 +1,8 @@
 <?php
+// bu sayfada admin gelen siparişleri görebiliyor.
+
+
+// session başlatarak tarayıcı belleğindeki admin_id değerini alıp admin kontrolü yapıyoruz.
 session_start();
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin-giris.php");
@@ -23,10 +27,6 @@ if (!isset($_SESSION["admin_id"])) {
 
 
     <header>
-        <!--  <a href="../restaurant-proje/">
-            <h1> Getirme </h1>
-        </a> -->
-
 
         <a href="../admin/">
             <div class="site-logo"></div>
