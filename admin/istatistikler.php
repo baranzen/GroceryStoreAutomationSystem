@@ -40,7 +40,8 @@ if (!isset($_SESSION["admin_id"])) {
 
 
     <header>
-        <a href="../">
+
+        <a href="../admin/">
             <div class="site-logo"></div>
         </a>
 

@@ -45,7 +45,7 @@ if (!isset($_SESSION["admin_id"])) {
             <h1> Getirme </h1>
         </a> -->
 
-        <a href="../">
+        <a href="../admin/">
             <div class="site-logo"></div>
         </a>
 

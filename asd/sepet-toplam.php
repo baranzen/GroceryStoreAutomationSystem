@@ -7,12 +7,14 @@ $restaurantID = $_SESSION["sepetRestaurantID"];
 if (count($restaurantID) > 1) {
     unset($_SESSION["sepet"]);
     unset($_SESSION["sepetRestaurantID"]);
-    echo "<script>alert('Sepette birden fazla restorant var. Lütfen tek restorant seçiniz.')</script>";
+    echo "<script>alert('Sepette birden fazla restorant var. Lütfen tek restorant seçiniz.');
+    window.location.href='../restaurant-proje/index.php';
+    </script>";
     header("index.php");
-} 
+}
 
 $sepet = $_SESSION["sepet"];
-print_r($_SESSION["sepetRestaurantID"]);
+/* print_r($_SESSION["sepetRestaurantID"]); */
 
 
 $urunler = array();
@@ -62,7 +64,7 @@ foreach ($sepet as $key) {
         </p>
     </div>
     <div>
-        <form action="#" method="POST">
+        <form method="POST">
             <button type="submit" name="order" class="btn btn-primary"> Siparis Ver </button>
         </form>
     </div>
@@ -75,7 +77,7 @@ if (isset($_POST["order"]) && !empty($sepet)) {
         echo "<script>alert('Giris Yapiniz!');</script>";
         header("Refresh:0; url=../restaurant-proje/giris-yap.php");
     } else {
-        
+        session_start();
         unset($_SESSION["sepet"]);
         unset($_SESSION["sepetRestaurantID"]);
         foreach ($urunler as $urunn) {
@@ -91,7 +93,10 @@ if (isset($_POST["order"]) && !empty($sepet)) {
             $sth = $dbconn->prepare($sql);
             $sth->execute([$productID, $productName, $product_price, $date, $userID, $restaurantID, $combine_id]);
         }
-        header("Location: sepet.php");
+        echo "<script
+        >alert('Siparisiniz Alindi!');
+        window.location.href='../restaurant-proje/index.php';
+        </script>";
     }
 
 }

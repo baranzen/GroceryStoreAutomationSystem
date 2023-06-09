@@ -27,13 +27,13 @@ if (!isset($_SESSION["admin_id"])) {
             <h1> Getirme </h1>
         </a> -->
 
-        <a href="../">
+
+        <a href="../admin/">
             <div class="site-logo"></div>
         </a>
 
-
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-        <?php require("../asd/admin_name.php") ?>
+            <?php require("../asd/admin_name.php") ?>
 
             <?php require_once("cikis-yap.php"); ?>
         </div>

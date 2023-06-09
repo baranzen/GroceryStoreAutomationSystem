@@ -23,10 +23,10 @@ if (!isset($_SESSION["admin_id"])) {
 <body>
 
     <header>
-        <a href="../">
+
+        <a href="../admin/">
             <div class="site-logo"></div>
         </a>
-
 
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
             <?php require("../asd/admin_name.php") ?>

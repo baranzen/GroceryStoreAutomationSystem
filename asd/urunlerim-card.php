@@ -1,8 +1,13 @@
 <?php
 
 require_once("../conn.php");
+session_start();
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: admin-giris.php");
+}
 
-$sql = "select * from products";
+$resturant_id = $_SESSION["admin_id"];
+$sql = "select * from products where restaurant_id = $resturant_id";
 $sth = $dbconn->prepare($sql);
 $sth->execute();
 $urunler = $sth->fetchAll(PDO::FETCH_ASSOC);

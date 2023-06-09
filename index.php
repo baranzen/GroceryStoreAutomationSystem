@@ -33,7 +33,7 @@
                     <i class="fa-solid fa-basket-shopping" style="color: #FFFFE8;"></i>
                 </button>
             </a>
-            
+
         </div>
     </header>
 
@@ -57,14 +57,13 @@
     </div>
 
     <main>
-            <?php
-            require_once("asd/restaurant-card.php");
-            ?>
+        <?php
+        require_once("asd/restaurant-card.php");
+        ?>
 
     </main>
 
     <footer>
-
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"

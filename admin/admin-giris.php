@@ -16,10 +16,11 @@
 <body>
 
     <header>
-        <a href="../admin">
+
+        <a href="../admin/">
             <div class="site-logo"></div>
         </a>
-        
+
     </header>
 
     <main>
@@ -53,11 +54,11 @@
 <?php
 require_once("../conn.php");
 
-if(isset($_POST["girisYap"])){
+if (isset($_POST["girisYap"])) {
     session_start();
     $name = $_POST["name"];
     $password = md5($_POST["password"]);
-    
+
 
     $query = $dbconn->prepare("SELECT * FROM admins WHERE admin_name = ? AND admin_password = ?");
     $query->execute([$name, $password]);

@@ -85,6 +85,6 @@ foreach ($restaurants as $restaurant) {
     $_SESSION["sepetRestaurantID"] = array_unique($_SESSION["sepetRestaurantID"]);
 
 
-    print_r($_SESSION["sepetRestaurantID"]);
+/*     print_r($_SESSION["sepetRestaurantID"]); */
 }
 ?>
